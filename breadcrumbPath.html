@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" name="viewport" content="width=device-width"/>
+        <title>Breadcrumbing</title>
+    </head>
+    <body>
+        <p>
+            <h1>Breadcrumbing</h1>
+            <h3>A guide</h3>
+            <p>
+                <h4>A very short one</h4>
+            </p>
+        </p>
+    </body>
+    <script>
+        
+        const getName = (el) => {
+            return el.id ? `${el.tagName.toLowerCase()}#${el.id}` :
+                            el.className ? `${el.tagName.toLowerCase()}.${el.className.split(" ").join(".")}` :
+                                            el.tagName.toLowerCase()
+        }
+
+        const getPath = (el, stopAt=document.body) => {
+            let curr = el
+            let ans = []
+            while (curr != stopAt) {
+                console.log(curr)
+                ans.push(getName(curr))
+                curr = curr.parentNode
+            }
+            console.log(ans)
+            return ans.reverse().join(">")
+        }
+        
+        document.addEventListener('click', (e) => {
+                const path = getPath(e.target);
+                console.log(path);
+        });
+
+    </script>
+</html>
