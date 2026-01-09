@@ -33,28 +33,51 @@
     </ul>
 
     <script>
+
         const ul = document.querySelector("ul")
         const input = document.querySelector("input")
         const button = document.querySelector("button")
         
+        ul.addEventListener("click", (ev) => {
+            const target = ev.target;
+
+            if (target.matches("button.delete")) {
+                const item = target.closest("li")
+                const text = item.querySelector("span").textContent
+                localStorage.removeItem(text)
+                item.remove()
+            } else if (target.matches("button.up")) {
+                const item = target.closest("li")
+                const prev = item.previousElementSibling;
+                item.parentElement.insertBefore(item, prev)
+            }
+
+        }) 
+
         const createListItem = (listRef, text) => {
             const item = document.createElement("li")
             const span = document.createElement("span")
             const butt = document.createElement("button")
+            butt.classList.add("delete")
 
+            const moveUpButton = document.createElement("button")
+            moveUpButton.classList.add("up")
             
             span.textContent = text
             butt.textContent = "Delete"
+            moveUpButton.textContent = "Up"
             
+            localStorage.setItem(text, localStorage.getItem(text) || 0) // instead of creating a new key, better to use domain as key and store all values in a list
             item.appendChild(span)
             item.appendChild(butt)
-
-            butt.addEventListener("click", (ev) => {
-                ev.preventDefault()
-                item.remove()
-            })
-
+            item.appendChild(moveUpButton)
             listRef.appendChild(item)
+        }
+
+        const loadFromLocalStorage = () => {
+            Object.keys(localStorage)?.forEach(element => {
+                createListItem(ul, element)
+            });
         }
 
         const clickHandler = (ev) => {
@@ -65,8 +88,8 @@
             input.focus()
         }
         
-        button.addEventListener("keydown", clickHandler)
-        
+        button.addEventListener("click", clickHandler)
+        loadFromLocalStorage()
 
     </script>
 </body>
