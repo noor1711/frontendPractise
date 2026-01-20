@@ -1,4 +1,9 @@
-import React, { useState, useMemo } from "react";
+import React, {
+  useDeferredValue,
+  useState,
+  useMemo,
+  useActionState,
+} from "react";
 import "./App.css";
 
 // 1. Move Row outside to prevent unmounting on every scroll/render
@@ -26,11 +31,23 @@ const MOCK_DATA = Array.from({ length: 5000 }, (_, i) => ({
   status: i % 5 === 0 ? "failed" : "success",
 }));
 
+const fetchData = async (prevState, formData) => {
+  if (prevState.dog == 2) {
+    const res = await new Promise((resolve) => setTimeout(resolve, 5000));
+    return { dog: 1, cat: 2 };
+  } else {
+    const res = await new Promise((resolve) => setTimeout(resolve, 5000));
+    return { dog: 2, cat: 1 };
+  }
+};
+
 function App() {
   const [inputValue, setInputValue] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [scrollTop, setScrollTop] = useState(0);
-
+  const [formState, formAction, isPending] = useActionState(fetchData, {
+    dog: 2,
+  });
   // Constants for Virtualization
   const windowHeight = 500;
   const rowHeight = 40; // Increased for better visibility
@@ -50,6 +67,8 @@ function App() {
     });
   }, [inputValue, selectedStatus]);
 
+  const deferedData = useDeferredValue(filteredData, MOCK_DATA);
+
   // 3. VIRTUAL MATH
   const startIndex = Math.floor(scrollTop / rowHeight);
   // Calculate how many to show, ensuring we don't go out of bounds
@@ -66,6 +85,15 @@ function App() {
 
   return (
     <div className="App" style={{ padding: "20px", fontFamily: "sans-serif" }}>
+      <form method="GET" action={formAction}>
+        {" "}
+        <p>{JSON.stringify(formState)}</p>
+        <button disabled={isPending} type="submit">
+          {" "}
+          Submit
+        </button>
+      </form>
+
       <h1>Rubrik Cluster Manager</h1>
 
       <div style={{ marginBottom: "20px", display: "flex", gap: "10px" }}>
