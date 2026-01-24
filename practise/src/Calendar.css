@@ -1,0 +1,23 @@
+.container {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border-collapse: collapse;
+    border: 2px solid black;
+}
+
+.day {
+    display: flex;
+    aspect-ratio: 1/1;
+    border: 1px solid grey;
+    overflow: "auto";
+    flex-direction: column;
+}
+
+.day:hover {
+    filter: brightness(0.8);
+    background-color: lightgreen;
+}
+
+.selected {
+    background-color: lightgreen;
+}

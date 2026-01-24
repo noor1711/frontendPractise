@@ -51,7 +51,7 @@ function App() {
   // Constants for Virtualization
   const windowHeight = 500;
   const rowHeight = 40; // Increased for better visibility
-  const overScan = 5;
+  const overScan = 10;
 
   // 2. DERIVED STATE: Filter data instantly during render.
   // 5k items is trivial for JS, no need for complex async state syncs.
@@ -74,7 +74,7 @@ function App() {
   // Calculate how many to show, ensuring we don't go out of bounds
   const endIndex = Math.min(
     filteredData.length,
-    startIndex + Math.ceil(windowHeight / rowHeight) + overScan
+    startIndex + Math.ceil(windowHeight / rowHeight) + overScan,
   );
 
   // Slice the data to only what is visible
@@ -134,7 +134,6 @@ function App() {
           height: `${windowHeight}px`,
           width: "500px",
           overflowY: "auto",
-          position: "relative",
           border: "2px solid #333",
           backgroundColor: "#f5f5f5",
         }}
